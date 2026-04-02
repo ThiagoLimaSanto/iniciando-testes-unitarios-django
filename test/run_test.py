@@ -27,7 +27,18 @@ def test_get_discount(mocker):
 def test_get_discount_with_spy(mocker):
     spy = mocker.spy(run, "fetch_discount_rate")
     resp = run.get_discount(100)
-    print(resp)
     
+    spy.assert_called_once()
+    spy.assert_called_with(0.9)
+    
+def fake_discount_rate(initial_value):
+    return 0.40
+
+def test_get_discount_with_spy_and_custom_return(mocker):
+    spy = mocker.patch('test.run.fetch_discount_rate', side_effect=fake_discount_rate)
+    
+    result = run.get_discount(100)
+    
+    assert result == 60.0
     spy.assert_called_once()
     spy.assert_called_with(0.9)
